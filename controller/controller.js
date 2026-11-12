@@ -8,8 +8,8 @@ exports.addTask = async(req,res)=>{
 
         const existingtask = await task.findOne({addtask})
 
-        if(!existingtask){
-       return res.status(409).json("task not added")
+        if(existingtask){
+       return res.status(409).json("task alredy added")
         }
         else{
             
