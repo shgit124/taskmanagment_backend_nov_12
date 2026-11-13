@@ -22,7 +22,7 @@ exports.addTask = async (req, res) => {
             })
         }
 
-        const newtask = new task({
+        const newtask = new tasks({
             addtask,
             description
         })
