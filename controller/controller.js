@@ -62,3 +62,52 @@ exports.listTask = async(req,res)=>{
         res.status(500).json(err)
     }
 }
+
+exports.gettaskDetailApi = async(req,res)=>{
+
+    const {id}=req.params
+    try{
+
+        const existingtask = await tasks.findById(id)
+        if(existingtask){
+
+            return res.status(200).json({
+                message:"task already added",
+                result:existingtask
+            })
+        }
+
+        else{
+            return res.status(409).json("task not founded")
+        }
+
+    } catch(err){
+        console.log(err)
+        res.status(500).json(err)
+    }
+}
+
+exports.updateTask =async(req,res)=>{
+    try{
+        
+        const {id}=req.params
+        const {addtask,description,status}=req.body
+
+        const response = await tasks.findByIdAndUpdate(id,{addtask,description,status},{new:true})
+
+        if(response){
+          return  res.status(200).json({
+                message:"task updated successfully",
+             result:response
+            })
+        }
+        else{
+            return res.status(404).json("updation failed")
+        }
+    }
+     catch(err){
+        console.log(err)
+        res.status(500).json(err)
+    }
+
+}
