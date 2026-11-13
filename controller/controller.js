@@ -1,36 +1,47 @@
 const task = require('../models/taskmodels')
 
 
-exports.addTask = async(req,res)=>{
-    try{
-       
-        const {addtask, description}= req.body
+exports.addTask = async (req, res) => {
+    try {
 
-        const existingtask = await task.findOne({addtask})
+        console.log("Request body:", req.body)
 
-        if(existingtask){
-       return res.status(409).json("task alredy added")
-        }
-        else{
-            
-            const newtask = new task({
-       addtask,description
+        const { addtask, description } = req.body
+
+        if (!addtask || !description) {
+            return res.status(400).json({
+                message: "All fields are required"
             })
-
-          await newtask.save()
-
-            return res.status(200).json({
-        message:"task completed",
-        details:newtask
-       })
         }
-     
 
-    }catch(err){
-        console.log(err)
-        res.status(500).json(err)
+        const existingtask = await task.findOne({ addtask })
+
+        if (existingtask) {
+            return res.status(409).json({
+                message: "Task already added"
+            })
+        }
+
+        const newtask = new task({
+            addtask,
+            description
+        })
+
+        await newtask.save()
+
+        return res.status(201).json({
+            message: "Task added successfully",
+            details: newtask
+        })
+
+    } catch (err) {
+
+        console.log("ADD TASK ERROR:", err.message)
+
+        return res.status(500).json({
+            message: err.message
+        })
     }
-    
 }
 
 exports.listTask = async(req,res)=>{
