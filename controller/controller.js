@@ -1,4 +1,4 @@
-const task = require('../models/taskmodels')
+const tasks = require('../models/taskmodels')
 
 
 exports.addTask = async (req, res) => {
@@ -14,7 +14,7 @@ exports.addTask = async (req, res) => {
             })
         }
 
-        const existingtask = await task.findOne({ addtask })
+        const existingtask = await tasks.findOne({ addtask })
 
         if (existingtask) {
             return res.status(409).json({
@@ -47,7 +47,7 @@ exports.addTask = async (req, res) => {
 exports.listTask = async(req,res)=>{
  try{
      
-    const tasklist = await task.find()
+    const tasklist = await tasks.find()
 
     if(tasklist){
       return res.status(200).json(tasklist)
