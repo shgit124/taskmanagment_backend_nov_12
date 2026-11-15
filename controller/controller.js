@@ -87,27 +87,41 @@ exports.gettaskDetailApi = async(req,res)=>{
     }
 }
 
-exports.updateTask =async(req,res)=>{
-    try{
-        
-        const {id}=req.params
-        const {addtask,description,status}=req.body
+exports.updateTask = async (req, res) => {
+    try {
+        console.log("UPDATE API CALLED")
 
-        const response = await tasks.findByIdAndUpdate(id,{addtask,description,status},{new:true})
+        const { id } = req.params
 
-        if(response){
-          return  res.status(200).json({
-                message:"task updated successfully",
-             result:response
+        console.log("ID:", id)
+        console.log("BODY:", req.body)
+
+        const response = await tasks.findById(id)
+
+        console.log("FOUND TASK:", response)
+
+        if (!response) {
+            return res.status(404).json({
+                message: "Task ID not found in MongoDB"
             })
         }
-        else{
-            return res.status(404).json("updation failed")
-        }
-    }
-     catch(err){
-        console.log(err)
-        res.status(500).json(err)
-    }
 
+        const updatedTask = await tasks.findByIdAndUpdate(
+            id,
+            req.body,
+            { new: true, runValidators: true }
+        )
+
+        return res.status(200).json({
+            message: "Task updated successfully",
+            result: updatedTask
+        })
+
+    } catch (err) {
+        console.log("ERROR:", err.message)
+
+        return res.status(500).json({
+            message: err.message
+        })
+    }
 }
