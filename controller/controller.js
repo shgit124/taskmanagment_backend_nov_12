@@ -125,3 +125,28 @@ exports.updateTask = async (req, res) => {
         })
     }
 }
+
+exports.taskDelete = async(req,res)=>{
+    try{
+         const {id}=req.params
+
+         const existingtask = await tasks.findByIdAndDelete(id)
+
+         if(!existingtask){
+
+            return res.status(404).json({
+                message:"task not found"
+            })
+         }
+
+       return res.status(200).json({
+    message: "Task deleted successfully",
+    result: existingtask
+})
+
+    }catch(err){
+        console.log(err)
+        res.status(500).json(err)
+    }
+
+}
